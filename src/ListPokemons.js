@@ -22,7 +22,6 @@ export const ListPokemons = () => {
                     </li>
                 ))}
             </ul>
-            <p>Is it working??</p> 
         </main>
     )
 }
