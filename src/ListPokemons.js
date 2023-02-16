@@ -10,11 +10,23 @@ export const ListPokemons = () => {
     }
     getPokemons();
 
+    const getPokemonDetails = async (url) => {
+        const response = await axios.get(`${url}`);
+        return response.data;
+    }
+
+    const handleClick = (url) => {
+        const data = getPokemonDetails(url);
+        console.log(data);
+    }
+
+
     return (
         <main>
             <ul>
                 {pokemons.map((pokemon) => (
                     <li
+                        onClick={(url) => handleClick(pokemon.url)}
                         className="pokemon"
                         key={pokemon.url}
                     >
