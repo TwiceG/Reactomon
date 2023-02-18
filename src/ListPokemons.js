@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export const ListPokemons = () => {
     const [pokemons, setPokemons] = useState([]);
+    const [pokemonsData, setPokemonData] = useState([]);
     async function getPokemons() {
         const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/`);
         setPokemons(response.data.results);
@@ -12,12 +13,12 @@ export const ListPokemons = () => {
 
     const getPokemonDetails = async (url) => {
         const response = await axios.get(`${url}`);
-        return response.data;
+        setPokemonData(response.data);
     }
 
     const handleClick = (url) => {
-        const data = getPokemonDetails(url);
-        console.log(data);
+        getPokemonDetails(url);
+        console.log(pokemonsData);
     }
 
 
