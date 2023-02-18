@@ -1,4 +1,4 @@
-import './App.css';
+import './style/App.css';
 import { Navbar } from './Navbar';
 import { ReactDOM } from 'react-dom/client';
 import {
