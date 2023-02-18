@@ -1,14 +1,25 @@
 import './App.css';
-import { ListPokemons } from './ListPokemons';
-import { ListTypes } from './ListTypes';
+import { Navbar } from './Navbar';
+import { ReactDOM } from 'react-dom/client';
+import {
+  createBrowserRouter,
+  RouterProvider
+} from "react-router-dom";
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: 
+      <div className="App">
+        <Navbar />
+      </div>
+  }
+]);
 
 function App() {
   return (
-    <div className="App">
-      <h1>Pokemons here?!</h1>
-      <ListPokemons />
-      <ListTypes />
-    </div>
+    <RouterProvider router={router} />
   );
 }
 
