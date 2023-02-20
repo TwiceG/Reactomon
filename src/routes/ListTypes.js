@@ -4,6 +4,7 @@ import { useState } from "react";
 
 export const ListTypes = () => {
     const [types, setTypes] = useState([]);
+
     async function getTypes() {
         const response = await axios.get(`https://pokeapi.co/api/v2/type/`);
         setTypes(response.data.results);
@@ -11,7 +12,7 @@ export const ListTypes = () => {
     getTypes();
 
     return (
-        <main>
+        <div>
             <ul>
                 {types.map((type) => (
                     <li
@@ -22,6 +23,6 @@ export const ListTypes = () => {
                     </li>
                 ))}
             </ul>
-        </main>
+        </div>
     )
 }

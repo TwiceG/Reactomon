@@ -1,13 +1,14 @@
 import './style/Navbar.css';
+import { Link } from 'react-router-dom';
 
 export const Navbar = () => {
     return (
         <nav>
-            <a href="/"><img id="logo" src="https://www.freepnglogos.com/uploads/pokemon-logo-text-png-7.png" alt="Written Pokemon logo" /></a>
+            <Link to="/"><img id="logo" src="https://www.freepnglogos.com/uploads/pokemon-logo-text-png-7.png" alt="Written Pokemon logo" /></Link>
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/list-pokemons">Pokemons</a></li>
-                <li><a href="/list-types">Pokemon types</a></li>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/list-pokemons">Pokemons</Link></li>
+                <li><Link to="/list-types">Pokemon types</Link></li>
             </ul>
         </nav>
     )
