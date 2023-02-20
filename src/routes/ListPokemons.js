@@ -21,6 +21,8 @@ export const ListPokemons = () => {
     /* getPokemons() */
    /*  console.log(1, pokemons); */
 
+
+
     const getPokemonDetails = () => {
         const datas = [];
         pokemons.map( async (pokemon) => {
@@ -60,12 +62,19 @@ export const ListPokemons = () => {
     },[]);
 
     useEffect(() => {
-        setURL();
-        console.log("2");
-        console.log(pokemonURLs);
+        pokemons.forEach((pokemon) => {
+            axios.get(pokemon.url)
+            .then(
+                response => {
+                    pokemon.img = response.data.sprites.front_default;
+                    setPokemons([...pokemons]);
+                } 
+            )
+
+        })
     }, [pokemons]);
 
-    
+ /*    
     useEffect(() => {
         getPokemonDetails();
         console.log("3");
@@ -79,9 +88,9 @@ export const ListPokemons = () => {
         if (pokemonSprite[0]){
 
             console.log("index", pokemonSprite[0].front_default);
-        }
+        } */
     
-    }, [pokemons])
+   /*  }, [pokemons]) */
     
     return (
         <div className='list-wrapper'>
@@ -95,7 +104,7 @@ export const ListPokemons = () => {
                                 onClick={(url) => handleClick(pokemon.url)} 
                                 className="card-body"
                                 >
-                                    <img src={pokemonSprite.front_default} alt={pokemon.name} />
+                                   {pokemon.img && <img src={pokemon.img} alt={pokemon.name} />}
                             </div>
                             <div className="card-footer">
                                 <button className='btn'>Stats</button>
