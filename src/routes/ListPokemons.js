@@ -8,60 +8,56 @@ import { useState, useEffect } from "react";
 export const ListPokemons = () => {
     const [pokemons, setPokemons] = useState([]);
     const [pokemonData, setPokemonData] = useState([]);
-    const [pokemonSprite, setPokemonSprite] = useState([]);
-    const [nextPokemons, setNextPokemons] = useState([]);
-    const [pokemonURLs, setPokemonURLs] = useState([]);
 
+    const [nextPokemons, setNextPokemons] = useState([]);
+    const [lastPokemons, lastNextPokemons] = useState([]);
+    
     async function getPokemons(url='https://pokeapi.co/api/v2/pokemon/') {
         const response = await axios.get(`${url}`); 
-        setPokemons(response.data.results);
+       /*  return response.data.results; */
+        setPokemons(response.data.results); 
     }
    
-
-    /* getPokemons() */
-   /*  console.log(1, pokemons); */
-
-
-
-    const getPokemonDetails = () => {
-        const datas = [];
-        pokemons.map( async (pokemon) => {
-            const response = await axios.get(pokemon.url);
-            datas.push(response.data);
-        })
-        setPokemonData(datas);
-        setSprites();
+    const getPokemonData = async (url='https://pokeapi.co/api/v2/pokemon/') => {
+        const response = await axios.get(url);
+        setPokemonData(response.data);
     }
 
-    const handleClick = (url) => {
-        getPokemonDetails(url);
-        console.log(pokemonData);
+
+
+    const handleNext = () => {
+        getPokemons(nextPokemons);
+        bindImg();
+        setNextPokemons(pokemonData.next);
+        getPokemonData(nextPokemons);
     }
 
-    const setSprites =  () => {
-        const sprites = [];
-        pokemonData.map((pokemon) => {       
-            sprites.push(pokemon.sprites);
+    const bindImg = () => {
+        pokemons.forEach((pokemon) => {
+            axios.get(pokemon.url)
+            .then(
+                response => {
+                    pokemon.img = response.data.sprites.front_default;
+                    setPokemons([...pokemons]);
+                     
+                } 
+            )
         })
-        setPokemonSprite(sprites);
-    }
-
-    function setURL() {
-        const urls = [];
-        pokemons.map((pokemon) => {
-            urls.push(pokemon.url);
-        })
-        setPokemonURLs(urls);
     }
     
     
     useEffect(() =>{
         getPokemons();
-        console.log("1");
-        console.log(pokemons);
+        getPokemonData();
+        bindImg();
+        
     },[]);
 
-    useEffect(() => {
+/*     useEffect(() =>{
+        getPokemonData(nextPokemons);
+    },[]); */
+
+/*     useEffect(() => {
         pokemons.forEach((pokemon) => {
             axios.get(pokemon.url)
             .then(
@@ -70,27 +66,10 @@ export const ListPokemons = () => {
                     setPokemons([...pokemons]);
                 } 
             )
-
         })
-    }, [pokemons]);
+    }, []); */
 
- /*    
-    useEffect(() => {
-        getPokemonDetails();
-        console.log("3");
-        console.log(pokemonData);
-    }, [pokemons])
-    
-    useEffect(() => {
-        setSprites();
-        console.log("list aaaaaa",pokemonSprite );
-        console.log("index", pokemonSprite[0]);
-        if (pokemonSprite[0]){
 
-            console.log("index", pokemonSprite[0].front_default);
-        } */
-    
-   /*  }, [pokemons]) */
     
     return (
         <div className='list-wrapper'>
@@ -101,7 +80,6 @@ export const ListPokemons = () => {
                                 {pokemon.name}
                             </div>
                             <div 
-                                onClick={(url) => handleClick(pokemon.url)} 
                                 className="card-body"
                                 >
                                    {pokemon.img && <img src={pokemon.img} alt={pokemon.name} />}
@@ -113,7 +91,7 @@ export const ListPokemons = () => {
                     ))}
             </div>
             <button className='btn' id="back-button">BACK</button>
-            <button className='btn' id="next-button">NEXT</button>
+            <button onClick={() => handleNext()} className='btn' id="next-button">NEXT</button>
         </div>   
     )
 }
