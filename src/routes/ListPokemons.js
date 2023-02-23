@@ -36,7 +36,7 @@ export const ListPokemons = () => {
         .then((pokeData) => {
             setPokemons(pokeData);
         })
-        bindImg();
+
         getPokemonData(nextPokemons)
         .then((data) => {
             setPokemonData(data);
@@ -50,7 +50,9 @@ export const ListPokemons = () => {
             .then((pokeData) => {
                 setPokemons(pokeData);
             })
+
         bindImg();
+
         getPokemonData(lastPokemons)
         .then((data) => {
             setPokemonData(data);
@@ -78,20 +80,27 @@ export const ListPokemons = () => {
     useEffect(() =>{
         getPokemons()
             .then((pokeData) => {
-                setPokemons(pokeData);
+                setPokemons(pokeData)
             })
         getPokemonData()
             .then((data) => {
                 setPokemonData(data);
             })
-            bindImg();  
+             
         
     },[]);
-
-    if (pokemonData === null) {
-        return ("Loading");
+    
+    if(pokemons.length === 20) {
+       /*  if(pokemons.img === undefined) {
+            bindImg();
+            return "LOOOOOOAAAADDDIIIING";
+        } */
+        if (Object.keys(pokemons[0]).length !== 3){
+            bindImg();
+            return "LOOOOOOAAAADDDIIIING";
+        }
     }
-
+    
     
     return (
         <div className='list-wrapper'>
