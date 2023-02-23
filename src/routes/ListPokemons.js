@@ -1,6 +1,7 @@
 import '../style/ListPokemons.css'
 import React from "react";
 import axios from "axios";
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 
@@ -8,29 +9,54 @@ import { useState, useEffect } from "react";
 export const ListPokemons = () => {
     const [pokemons, setPokemons] = useState([]);
     const [pokemonData, setPokemonData] = useState([]);
+    
 
     const [nextPokemons, setNextPokemons] = useState([]);
-    const [lastPokemons, lastNextPokemons] = useState([]);
+    const [lastPokemons, setLastPokemons] = useState([]);
+
+    const navigate = useNavigate();
     
     async function getPokemons(url='https://pokeapi.co/api/v2/pokemon/') {
         const response = await axios.get(`${url}`); 
-       /*  return response.data.results; */
-        setPokemons(response.data.results); 
+        return response.data.results;
+        /* setPokemons(response.data.results); */ 
     }
    
-    const getPokemonData = async (url='https://pokeapi.co/api/v2/pokemon/') => {
+    async function getPokemonData(url='https://pokeapi.co/api/v2/pokemon/') {
         const response = await axios.get(url);
-        setPokemonData(response.data);
+        return response.data;
+        /* setPokemonData(response.data); */
     }
 
 
 
     const handleNext = () => {
-        getPokemons(nextPokemons);
+        pokemonData.next && setNextPokemons(pokemonData.next);
+        getPokemons(nextPokemons)
+        .then((pokeData) => {
+            setPokemons(pokeData);
+        })
         bindImg();
-        setNextPokemons(pokemonData.next);
-        getPokemonData(nextPokemons);
+        getPokemonData(nextPokemons)
+        .then((data) => {
+            setPokemonData(data);
+        })
+        
     }
+
+    const handleBack = () => {
+        pokemonData.previous && setLastPokemons(pokemonData.previous);
+        getPokemons(lastPokemons)
+            .then((pokeData) => {
+                setPokemons(pokeData);
+            })
+        bindImg();
+        getPokemonData(lastPokemons)
+        .then((data) => {
+            setPokemonData(data);
+        })
+    }
+    
 
     const bindImg = () => {
         pokemons.forEach((pokemon) => {
@@ -38,43 +64,39 @@ export const ListPokemons = () => {
             .then(
                 response => {
                     pokemon.img = response.data.sprites.front_default;
-                    setPokemons([...pokemons]);
-                     
+                    setPokemons([...pokemons]);   
                 } 
             )
         })
     }
     
+    const openPokemonDetails = (id) => {
+            navigate(`/pokemon-details/${id}`)
+    }
+    
     
     useEffect(() =>{
-        getPokemons();
-        getPokemonData();
-        bindImg();
+        getPokemons()
+            .then((pokeData) => {
+                setPokemons(pokeData);
+            })
+        getPokemonData()
+            .then((data) => {
+                setPokemonData(data);
+            })
+            bindImg();  
         
     },[]);
 
-/*     useEffect(() =>{
-        getPokemonData(nextPokemons);
-    },[]); */
-
-/*     useEffect(() => {
-        pokemons.forEach((pokemon) => {
-            axios.get(pokemon.url)
-            .then(
-                response => {
-                    pokemon.img = response.data.sprites.front_default;
-                    setPokemons([...pokemons]);
-                } 
-            )
-        })
-    }, []); */
-
+    if (pokemonData === null) {
+        return ("Loading");
+    }
 
     
     return (
         <div className='list-wrapper'>
             <div className="pokemon-list">
-                    {pokemons.map((pokemon, i) => (
+                    {pokemons.map((pokemon) => (
                         <div className="card" key={pokemon.url}> 
                             <div className="card-header">
                                 {pokemon.name}
@@ -85,13 +107,13 @@ export const ListPokemons = () => {
                                    {pokemon.img && <img src={pokemon.img} alt={pokemon.name} />}
                             </div>
                             <div className="card-footer">
-                                <button className='btn'>Stats</button>
+                            <Link to={`/pokemon-details/${pokemon.url.at(-2)}`}><button  onClick={(id) => openPokemonDetails(pokemon.url.at(-2))} className='btn'>Stats</button></Link>
                             </div>
                         </div>
                     ))}
             </div>
-            <button className='btn' id="back-button">BACK</button>
-            <button onClick={() => handleNext()} className='btn' id="next-button">NEXT</button>
+            <button onClick={handleBack} className='btn' id="back-button">BACK</button>
+            <button onClick={handleNext} className='btn' id="next-button">NEXT</button>
         </div>   
     )
 }
