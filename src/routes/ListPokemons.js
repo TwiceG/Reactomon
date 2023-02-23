@@ -28,35 +28,28 @@ export const ListPokemons = () => {
         /* setPokemonData(response.data); */
     }
 
-
-
-    const handleNext = () => {
-        pokemonData.next && setNextPokemons(pokemonData.next);
-        getPokemons(nextPokemons)
+    const handleData = (url) => {
+        getPokemons(url)
         .then((pokeData) => {
             setPokemons(pokeData);
         })
 
-        getPokemonData(nextPokemons)
+        getPokemonData(url)
         .then((data) => {
             setPokemonData(data);
         })
-        
+    }
+
+
+    const handleNext = () => {
+        pokemonData.next && setNextPokemons(pokemonData.next);
+        handleData(nextPokemons);
+    
     }
 
     const handleBack = () => {
         pokemonData.previous && setLastPokemons(pokemonData.previous);
-        getPokemons(lastPokemons)
-            .then((pokeData) => {
-                setPokemons(pokeData);
-            })
-
-        bindImg();
-
-        getPokemonData(lastPokemons)
-        .then((data) => {
-            setPokemonData(data);
-        })
+        handleData(lastPokemons);
     }
     
 
@@ -86,24 +79,38 @@ export const ListPokemons = () => {
             .then((data) => {
                 setPokemonData(data);
             })
-             
-        
     },[]);
-    
-    if(pokemons.length === 20) {
-       /*  if(pokemons.img === undefined) {
+
+    useEffect(() => {
+        bindImg();
+    }, [lastPokemons, nextPokemons])
+
+    useEffect(() => {
+        handleNext();
+        if (nextPokemons){
             bindImg();
-            return "LOOOOOOAAAADDDIIIING";
-        } */
-        if (Object.keys(pokemons[0]).length !== 3){
+        }
+    },[nextPokemons])
+
+    useEffect(() => {
+        handleBack();
+        if (lastPokemons){
+            bindImg();
+        }
+    },[lastPokemons])
+    
+    if(pokemons.length > 0) {
+        if (Object.keys(pokemons[0]).length < 3){
             bindImg();
             return "LOOOOOOAAAADDDIIIING";
         }
-    }
+    } 
     
     
     return (
         <div className='list-wrapper'>
+            <button onClick={handleBack} className='btn' id="back-button">BACK</button>
+            <button onClick={handleNext} className='btn' id="next-button">NEXT</button>
             <div className="pokemon-list">
                     {pokemons.map((pokemon) => (
                         <div className="card" key={pokemon.url}> 
@@ -121,8 +128,7 @@ export const ListPokemons = () => {
                         </div>
                     ))}
             </div>
-            <button onClick={handleBack} className='btn' id="back-button">BACK</button>
-            <button onClick={handleNext} className='btn' id="next-button">NEXT</button>
+            
         </div>   
     )
 }

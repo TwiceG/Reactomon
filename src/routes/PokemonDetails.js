@@ -12,8 +12,7 @@ export const PokemonDetails = () => {
 
     async function getPokemonData(url) {
         const response = await axios.get(url);
-        /* setPokemon(response.data); */
-         
+        /* setPokemon(response.data); */ 
         return response.data;
     }
 
