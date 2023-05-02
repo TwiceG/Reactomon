@@ -18,38 +18,29 @@ export const ListPokemons = () => {
     
     async function getPokemons(url='https://pokeapi.co/api/v2/pokemon/') {
         const response = await axios.get(`${url}`); 
-        return response.data.results;
-        /* setPokemons(response.data.results); */ 
+        // return response.data.results;
+        setPokemons(response.data.results);
     }
    
     async function getPokemonData(url='https://pokeapi.co/api/v2/pokemon/') {
         const response = await axios.get(url);
-        return response.data;
-        /* setPokemonData(response.data); */
+        // return response.data;
+        setPokemonData(response.data);
     }
 
     const handleData = (url) => {
         getPokemons(url)
-        .then((pokeData) => {
-            setPokemons(pokeData);
-        })
-
         getPokemonData(url)
-        .then((data) => {
-            setPokemonData(data);
-        })
     }
+
 
 
     const handleNext = () => {
         pokemonData.next && setNextPokemons(pokemonData.next);
-        handleData(nextPokemons);
-    
     }
 
     const handleBack = () => {
         pokemonData.previous && setLastPokemons(pokemonData.previous);
-        handleData(lastPokemons);
     }
     
 
@@ -65,40 +56,24 @@ export const ListPokemons = () => {
         })
     }
     
-    const openPokemonDetails = (id) => {
-            navigate(`/pokemon-details/${id}`)
-    }
-    
     
     useEffect(() =>{
-        getPokemons()
-            .then((pokeData) => {
-                setPokemons(pokeData)
-            })
-        getPokemonData()
-            .then((data) => {
-                setPokemonData(data);
-            })
-    },[]);
-
-    useEffect(() => {
+        getPokemons(nextPokemons)
+        getPokemonData(nextPokemons)
         bindImg();
-    }, [lastPokemons, nextPokemons])
+    },[nextPokemons]);
+
+    useEffect(() =>{
+        getPokemons(lastPokemons)
+        getPokemonData(lastPokemons)
+        bindImg();
+    },[lastPokemons]);
 
     useEffect(() => {
-        handleNext();
-        if (nextPokemons){
-            bindImg();
-        }
-    },[nextPokemons])
+        getPokemons();
+        getPokemonData();
+    },[])
 
-    useEffect(() => {
-        handleBack();
-        if (lastPokemons){
-            bindImg();
-        }
-    },[lastPokemons])
-    
     if(pokemons.length > 0) {
         if (Object.keys(pokemons[0]).length < 3){
             bindImg();
@@ -123,7 +98,7 @@ export const ListPokemons = () => {
                                    {pokemon.img && <img src={pokemon.img} alt={pokemon.name} />}
                             </div>
                             <div className="card-footer">
-                            <Link to={`/pokemon-details/${pokemon.url.at(-2)}`}><button  onClick={(id) => openPokemonDetails(pokemon.url.at(-2))} className='btn'>Stats</button></Link>
+                            <Link to={isNaN(parseInt(pokemon.url.slice(-3,-1))) ? `/pokemon-details/${pokemon.url.slice(-2,-1)}` : `/pokemon-details/${pokemon.url.slice(-3,-1)}` }><button   className='btn'>Stats</button></Link>
                             </div>
                         </div>
                     ))}
