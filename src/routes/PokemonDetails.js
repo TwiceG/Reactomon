@@ -37,7 +37,6 @@ export const PokemonDetails = () => {
                             <div 
                                 className="card-body"
                                 >
-                                    {console.log(pokemon)}
                                    <img src={pokemon.sprites.front_default} alt={pokemon.name} />
                                    <p>Pokemon type: {pokemon.types[0].type.name}</p>
                                    <p>Pokemon weight: {pokemon.weight}</p>

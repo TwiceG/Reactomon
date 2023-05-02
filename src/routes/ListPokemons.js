@@ -1,7 +1,7 @@
 import '../style/ListPokemons.css'
 import React from "react";
 import axios from "axios";
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
 
 
@@ -13,8 +13,6 @@ export const ListPokemons = () => {
 
     const [nextPokemons, setNextPokemons] = useState([]);
     const [lastPokemons, setLastPokemons] = useState([]);
-
-    const navigate = useNavigate();
     
     async function getPokemons(url='https://pokeapi.co/api/v2/pokemon/') {
         const response = await axios.get(`${url}`); 
@@ -58,14 +56,12 @@ export const ListPokemons = () => {
     
     
     useEffect(() =>{
-        getPokemons(nextPokemons)
-        getPokemonData(nextPokemons)
+        handleData(nextPokemons);
         bindImg();
     },[nextPokemons]);
 
     useEffect(() =>{
-        getPokemons(lastPokemons)
-        getPokemonData(lastPokemons)
+        handleData(lastPokemons);
         bindImg();
     },[lastPokemons]);
 

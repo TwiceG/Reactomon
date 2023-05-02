@@ -1,0 +1,22 @@
+.pokemon-types{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+    z-index: 100;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+
+.btn{
+    margin-top: .25rem;
+    background-color: hsl(200, 50%, 50%);
+    border: none;
+    padding: .5em .75em;
+    cursor: pointer;
+}
+
+.btn:hover{
+    background-color: hsl(200, 50%, 40%);
+    color: azure;
+}
